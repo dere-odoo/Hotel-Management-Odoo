@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--Actions-->
+    <record id="open_hotels" model="ir.actions.act_window">
+        <field name="res_model">hotel.hotel</field>
+        <field name="view_mode">tree,form</field> 
+    </record>
+
+    <!--Tree View-->
+    <record id="hotel_hotel_tree_view" model="ir.ui.view">
+        <field name="name">hotel.model.view</field>
+        <field name="model">hotel.hotel</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="managed_by"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Form View-->
+    <record id="hotel_hotel_form_view" model="ir.ui.view">
+        <field name="name">hotel.model.view</field>
+        <field name="model">hotel.hotel</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title mb3">
+                        <h1><field name="name" placeholder="Name"></field></h1>
+                    </div>
+                    <group>
+                        <field name="hotel_image"></field>
+                    </group>
+                    <group>
+                        <field name="managed_by" />
+                        <field name="address" />
+                    </group>
+                    <notebook>
+                        <page string="Rooms">
+                            <field name="room_ids" string="Rooms">
+                                <tree editable="bottom" open_form_view="True">
+                                    <field name="name" />
+                                    <field name="selling_price" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

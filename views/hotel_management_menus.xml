@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id = "estate_menu" name="Hotel Management">
+        <menuitem id="hotel_topbar" name="Hotels">
+            <menuitem id="topbar_open_hotels" name="Hotel" action="open_hotels"></menuitem>
+            <menuitem id="topbar_open_services" name="Services" action="open_services"></menuitem>
+            <menuitem id="topbar_open_rooms" name="Rooms" action="open_rooms"></menuitem>
+        </menuitem>
+        <menuitem id="reservation_topbar" name="Reservations" action="open_reservations"></menuitem>
+    </menuitem>
+</odoo>

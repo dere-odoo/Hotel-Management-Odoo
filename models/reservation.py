@@ -1,34 +1,27 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from datetime import timedelta
 
 class reservation(models.Model):
     _name = "hotel.reservation"
     _description = "all customer reservation"
     _check_company_auto = True
 
-    company_id = fields.Many2one("res.company", store=True, copy=False,
-                                string="Company",
-                                default=lambda self: self.env.user.company_id.id)
-    currency_id = fields.Many2one("res.currency", string="Currency",
-                                related="company_id.currency_id",
-                                default=lambda
-                                self: self.env.user.company_id.currency_id.id)
-    res_name = fields.Char(string="Name", search="_search_name",required=True)
-    customer_name = fields.Many2one(string="Customer", comodel_name="hotel.contact")
-    selling_price = fields.Monetary("Unit price", required=True)
-    stayFor = fields.Date()
-    hotel = fields.Many2one(string="Hotel", comodel_name="hotel.hotel", required=True)
-    hotelName = fields.Char(related="hotel.name")
-    room = fields.Many2one(string="Room", comodel_name="hotel.rooms", required=True )
-    startDate = fields.Date(default=fields.Date.today())
-    endDate = fields.Date(string="End Date", compute="_compute_ed_date", store=True, readonly=True)
+    res_name = fields.Char(string="Name", required=True)
+    selling_price = fields.Float(string="Unit price", required=True)
+    stay_for = fields.Integer(string="Number of days", required=True)
+    hotel_id = fields.Many2one(string="Hotel", comodel_name="hotel.hotel", required=True)
+    hotel_address = fields.Text(related="hotel_id.address")
+    reservation_room = fields.One2many(string="room", comodel_name="hotel.reservation_room_price", inverse_name="reservation_id")
+    start_date = fields.Date()
+    end_date = fields.Date(string="End Date", compute="_compute_end_date", store=True, readonly=True)
+    customer = fields.Many2one(string="Customer", comodel_name="res.users", required=True)
 
-    @api.depends("startDate","stayFor")
+    @api.depends("start_date", "stay_for")
     def _compute_end_date(self):
-        if record.startDate and record.stayFor:
-            record.endDate = record.startDate+record.endDate
-    
-    def _search_name(self,operator,value):
-        return[("Res_name",operator,value)]
+        for record in self:
+            if record.start_date and record.stay_for:
+                record.end_date = record.start_date+timedelta(days=record.stay_for)
+
     

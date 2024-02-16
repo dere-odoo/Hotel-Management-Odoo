@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--Actions-->
+    <record id="open_reservations" model="ir.actions.act_window">
+        <field name="name">Open Reservations</field>
+        <field name="res_model">hotel.reservation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Tree View-->
+    <record id="reservation_custom_tree_view" model="ir.ui.view">
+        <field name="name">reservation.default.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <tree string="test">
+                <field name="res_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Form View-->
+    <record id="reservation_custom_form_view" model="ir.ui.view">
+        <field name="name">Form.custom.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="res_name" string="Name" placeholder="Name"/>
+                        </group>
+                        <group>
+                            <field name="customer" string="Customer"></field>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="selling_price" placeholder="0.0"/>
+                        </group>
+                        <group>
+                            <field name="stay_for" placeholder="0"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="hotel_id" />
+                        </group>
+                        <field name="hotel_address"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                        <notebook>
+                            <page string="Rooms">
+                                <field name="reservation_room" >
+                                    <tree editable="bottom" open_form_view="True">
+                                        <field name="room_id"/>
+                                        <field name="room_price" editable="True"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook> 
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
