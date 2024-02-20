@@ -14,10 +14,11 @@
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/hotel_service_model_view.xml',
-        'views/hotel_management_menus.xml',
         'views/hotel_hotel_model_view.xml',
         'views/hotel_reservation_model_view.xml',
-        'views/hotel_rooms_model_view.xml'],
+        'views/hotel_rooms_model_view.xml',
+        'views/hotel_management_menus.xml',
+        ],
 }
 
 

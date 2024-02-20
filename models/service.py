@@ -10,5 +10,6 @@ class service(models.Model):
     cost = fields.Float(string="Cost per unit", required=True)
     name = fields.Char(string="Name", default="cleaning service", required=True, search="_search_name")
     hotel = fields.Many2many(string="Hotel", comodel_name="hotel.hotel")
+    assigned_to = fields.Many2one(string="Assgned to", comodel_name="res.users", domain=lambda self: [('groups_id', 'in', [self.env.ref('Hotel-Management-Odoo.group_employee').id])])
 
  

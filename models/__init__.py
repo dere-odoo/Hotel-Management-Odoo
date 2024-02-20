@@ -4,4 +4,4 @@ from . import hotel
 from . import reservation
 from . import rooms
 from . import service
-from . import reservation_room
+from . import reservation_line

@@ -2,7 +2,7 @@
 <odoo>
     <!--Actions-->
     <record id="open_services" model="ir.actions.act_window">
-        <field name="name">Open Services</field>
+        <field name="name">Services</field>
         <field name="res_model">hotel.service</field>
         <field name="view_mode">tree,form,kanban</field>
     </record>
@@ -13,6 +13,7 @@
         <field name="model">hotel.service</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="assigned_to"/>
                 <field name="name"/>
                 <field name="cost"/>
             </tree>
@@ -30,7 +31,8 @@
                         <h1><field name="name" placeholder="Name"></field></h1>
                     </div>
                     <group>
-                        <field name="cost"></field>
+                        <field name="cost" />
+                        <field name="assigned_to"/>
                     </group>
                     <field name="hotel" />
                 </sheet>

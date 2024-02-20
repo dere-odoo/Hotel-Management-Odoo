@@ -2,6 +2,7 @@
 <odoo>
     <!--Actions-->
     <record id="open_hotels" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
         <field name="res_model">hotel.hotel</field>
         <field name="view_mode">tree,form</field> 
     </record>
@@ -32,7 +33,7 @@
                         <field name="hotel_image"></field>
                     </group>
                     <group>
-                        <field name="managed_by" />
+                        <field name="managed_by"/>
                         <field name="address" />
                     </group>
                     <notebook>

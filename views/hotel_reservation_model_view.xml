@@ -2,7 +2,7 @@
 <odoo>
     <!--Actions-->
     <record id="open_reservations" model="ir.actions.act_window">
-        <field name="name">Open Reservations</field>
+        <field name="name">Reservations</field>
         <field name="res_model">hotel.reservation</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -59,7 +59,8 @@
                             <page string="Rooms">
                                 <field name="reservation_room" >
                                     <tree editable="bottom" open_form_view="True">
-                                        <field name="room_id"/>
+                                        <field name="allowed_room_id" column_invisible="1" />
+                                        <field name="room_id" domain="[('id', 'in', allowed_room_id)]"/>
                                         <field name="room_price" editable="True"/>
                                     </tree>
                                 </field>
