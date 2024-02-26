@@ -33,7 +33,7 @@
                         <field name="hotel_image"></field>
                     </group>
                     <group>
-                        <field name="managed_by"/>
+                        <field name="managed_by" />
                         <field name="address" />
                     </group>
                     <notebook>
@@ -42,6 +42,15 @@
                                 <tree editable="bottom" open_form_view="True">
                                     <field name="name" />
                                     <field name="selling_price" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Services">
+                            <field name="service_ids" string="Services">
+                                <tree editable="bottom" open_form_view="True">
+                                    <field name="name" />
+                                    <field name="cost" />
+                                    <field name="assigned_to"/>
                                 </tree>
                             </field>
                         </page>

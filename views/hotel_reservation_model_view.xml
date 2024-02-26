@@ -28,17 +28,11 @@
                     <group>
                         <group>
                             <field name="res_name" string="Name" placeholder="Name"/>
-                        </group>
-                        <group>
                             <field name="customer" string="Customer"></field>
-                        </group>
-                    </group>
-                    <group>
-                        <group>
-                            <field name="selling_price" placeholder="0.0"/>
+                         
                         </group>
                         <group>
-                            <field name="stay_for" placeholder="0"/>
+                            <field name="active"/>
                         </group>
                     </group>
                     <group>
@@ -47,25 +41,34 @@
                         </group>
                         <field name="hotel_address"/>
                     </group>
+                    <br></br>
                     <group>
                         <group>
                             <field name="start_date"/>
-                        </group>
-                        <group>
                             <field name="end_date"/>
                         </group>
+                        <group>
+                            <field name="stay_for" placeholder="0"/>
+                            
+                        </group>
                     </group>
-                        <notebook>
-                            <page string="Rooms">
-                                <field name="reservation_room" >
-                                    <tree editable="bottom" open_form_view="True">
-                                        <field name="allowed_room_id" column_invisible="1" />
-                                        <field name="room_id" domain="[('id', 'in', allowed_room_id)]"/>
-                                        <field name="room_price" editable="True"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook> 
+                    <notebook>
+                        <page string="Rooms">
+                            <field name="reservation_line_ids" >
+                                <tree editable="bottom" open_form_view="True">
+                                    <field name="allowed_room_id" column_invisible="1" />
+                                    <field name="room_id" domain="[('id', 'in', allowed_room_id)]"/>
+                                    <field name="room_price" editable="True"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group class="oe_subtotal_footer" colspan="2">
+                            <field name="selling_price" widget="account-tax-totals-field" colspan="2" readonly="1"/>
+                            <field name="discounted_price" widget="account-tax-totals-field" colspan="2" readonly="1"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
