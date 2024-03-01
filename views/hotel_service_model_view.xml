@@ -7,6 +7,25 @@
         <field name="view_mode">tree,form,kanban</field>
     </record>
 
+    <!--Search View-->
+    <record id="hotel_service_search" model="ir.ui.view">
+        <field name="name">hotel.service.search.view</field>
+        <field name="model">hotel.service</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="[('name' , 'ilike', self)]" ></field>
+                <field name="hotel_ids"></field>          
+                <group expand="0" string="hotel_ids">
+                    <filter name="hotel_ids" string="Hotels" domain="[]" context="{'group_by': 'hotel_ids'}"></filter>
+                </group>
+                <group expand="0" string="assigned_to">
+                    <filter name="assigned_to" string="Employee" domain="[]" context="{'group_by': 'assigned_to'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
     <!--Tree View-->
     <record id="hotel_service_tree_view" model="ir.ui.view">
         <field name="name">hotel.service.tree.view</field>
@@ -34,7 +53,7 @@
                         <field name="cost" />
                         <field name="assigned_to"/>
                     </group>
-                    <field name="hotel" />
+                    <field name="hotel_ids" />
                 </sheet>
             </form>
         </field>

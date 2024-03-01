@@ -7,6 +7,21 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <!--Search View-->
+    <record id="hotel_rooms_search" model="ir.ui.view">
+        <field name="name">hotel.rooms.search.view</field>
+        <field name="model">hotel.rooms</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="[('name' , 'ilike', self)]" ></field>
+                <field name="hotel_id"></field>          
+                <group expand="0" string="hotel_id">
+                    <filter name="hotel_id" string="Hotels" domain="[]" context="{'group_by': 'hotel_id'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!--Tree View-->
     <record id="hotel_rooms_tree_view" model="ir.ui.view">
         <field name="name">hotel.rooms.model.view</field>

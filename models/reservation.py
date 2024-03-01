@@ -2,7 +2,7 @@
 
 from odoo import models, fields, api
 from datetime import timedelta
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class reservation(models.Model):
@@ -17,11 +17,18 @@ class reservation(models.Model):
     hotel_id = fields.Many2one(string="Hotel", comodel_name="hotel.hotel", required=True)
     hotel_address = fields.Text(related="hotel_id.address")
     reservation_line_ids = fields.One2many(string="room", comodel_name="hotel.reservation.line", inverse_name="reservation_id")
-    start_date = fields.Date()
+    start_date = fields.Date(required = True)
     end_date = fields.Date(string="End Date", compute="_compute_end_date", store=True, readonly=True)
-    customer = fields.Many2one(string="Customer", comodel_name="res.users", required=True)
+    customer_id = fields.Many2one(string="Customer", comodel_name="res.users", required=True)
     active = fields.Boolean(string="Active", default=True)
     comments = fields.Text(string="Comments")
+    state = fields.Selection(string="state", default="draft",
+        selection=[("draft", "Draft"), ("booked", "Booked"), ("canceled", "Canceled")]
+    )
+
+    _sql_constraints = [
+        ("check_stay_for_positive", "CHECK (stay_for > 0)", "Number of days must be strictly positive")
+    ]
 
     @api.depends("start_date", "stay_for")
     def _compute_end_date(self):
@@ -36,7 +43,7 @@ class reservation(models.Model):
         for record in offers:
             total += record.room_id.selling_price
         self.selling_price = total*self.stay_for
-
+        
     def _compute_discounted_price(self):
         total = 0
         offers = self.reservation_line_ids
@@ -44,5 +51,16 @@ class reservation(models.Model):
             total += record.room_price
         self.discounted_price = total*self.stay_for
 
+
+    def action_reservation_book(self):
+        self.ensure_one()
+        breakpoint()
+        cur_rooms = [reservation_line.room_id.id for reservation_line in self.reservation_line_ids] 
+        reservations_count = self.search_count([("hotel_id", "=", self.hotel_id.id), ("end_date", ">=" , fields.Date.to_date(self.start_date)), ("state", "=", "booked"), ("reservation_line_ids.room_id.id", "in", cur_rooms)])
+        if reservations_count > 0:
+            raise UserError("One of the rooms in this reservations is already booked")
+        self.state = "booked"
     
-    
+    def action_reservation_cancel(self):
+        self.ensure_one()
+        self.state = "canceled"

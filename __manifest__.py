@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 
 {
     'name': 'Hotel Management',
@@ -9,17 +11,16 @@
     'installable': True,
     'application': True,
     'license': 'OEEL-1',
-    'depends': ['base'],
+    'depends': ['base', 'website'],
     'data':[
         'security/groups.xml',
         'security/ir.model.access.csv',
         'views/hotel_service_model_view.xml',
-        'views/hotel_hotel_model_view.xml',
         'views/hotel_reservation_model_view.xml',
+        'views/hotel_hotel_model_view.xml',
         'views/hotel_rooms_model_view.xml',
         'views/hotel_management_menus.xml',
+        'data/website_menu.xml',
+        'views/website_template.xml'
         ],
 }
-
-
-#lisence
