@@ -31,9 +31,10 @@
         <field name="name">hotel.service.tree.view</field>
         <field name="model">hotel.service</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="assigned_to"/>
+            <tree editable="bottom" open_form_view="1">
                 <field name="name"/>
+                <field name="assigned_to"/>
+                <field name="hotel_ids" widget="many2many_tags"/>
                 <field name="cost"/>
             </tree>
         </field>
@@ -56,6 +57,24 @@
                     <field name="hotel_ids" />
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!--Kanban View-->
+    <record id="hotel_service_kanban_view" model="ir.ui.view">
+        <field name="name">hotel.service.kanban.view</field>
+        <field name="model">hotel.service</field>
+        <field name="arch" type="xml">
+            <kanban string="services" editable="top" default_group_by="hotel_ids">
+                <template>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <h2><field name="name"/></h2>
+                            <p class="my-0"><i class="fa fa-user"/> <field name="assigned_to"/></p>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
         </field>
     </record>
 </odoo>

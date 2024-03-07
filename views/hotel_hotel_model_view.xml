@@ -4,7 +4,7 @@
     <record id="open_hotels" model="ir.actions.act_window">
         <field name="name">Hotels</field>
         <field name="res_model">hotel.hotel</field>
-        <field name="view_mode">tree,form</field> 
+        <field name="view_mode">tree,form,graph</field> 
     </record>
 
     <!--Search View-->
@@ -43,25 +43,28 @@
             <form>
                 <sheet>
                     <div name="button_box" class="oe_button_box">
-                        <button string="Reservations" name="%(reservation_action)d" type="action" icon="fa-money">
-                            <!-- <field name="reservation_count" widget="statinfo"/> -->
-                        </button>
+                        <button string="Reservations" name="%(reservation_action)d" type="action" icon="fa-money"></button>
                     </div>
                     <div class="oe_title mb3">
                         <h1><field name="name" placeholder="Name"></field></h1>
                     </div>
+                    <field name="description"></field>
                     <group>
                         <field name="hotel_image"></field>
                     </group>
                     <group>
                         <field name="managed_by" />
                         <field name="address" />
+                        <field name="contact_info_mail" />
+                        <field name="contact_info_phone"/>
+                        <field name="number_of_reservations"/>
                     </group>
                     <notebook>
                         <page string="Rooms">
                             <field name="room_ids" string="Rooms">
                                 <tree editable="bottom" open_form_view="True">
                                     <field name="name" />
+                                    <field name="category_ids" widget="many2many_tags"/>
                                     <field name="selling_price" />
                                 </tree>
                             </field>
@@ -80,4 +83,18 @@
             </form>
         </field>
     </record>
+
+    <!--Graph View-->
+    <record id="hotel_graph_view" model="ir.ui.view">
+        <field name="name">hotel.graph.view</field>
+        <field name="model">hotel.hotel</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="name"></field>
+                <field name="number_of_reservations"/>
+                <field name="number_of_rooms"/>
+            </graph>
+        </field>
+    </record>
+
 </odoo>

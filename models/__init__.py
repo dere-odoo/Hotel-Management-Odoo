@@ -5,3 +5,4 @@ from . import reservation
 from . import rooms
 from . import service
 from . import reservation_line
+from. import room_category

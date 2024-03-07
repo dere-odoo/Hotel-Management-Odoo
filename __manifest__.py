@@ -19,8 +19,9 @@
         'views/hotel_reservation_model_view.xml',
         'views/hotel_hotel_model_view.xml',
         'views/hotel_rooms_model_view.xml',
+        'views/hotel_category_model_view.xml',
         'views/hotel_management_menus.xml',
         'data/website_menu.xml',
-        'views/website_template.xml'
+        'views/website_template.xml',
         ],
 }

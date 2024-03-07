@@ -4,7 +4,7 @@
     <record id="open_rooms" model="ir.actions.act_window">
         <field name="name">Rooms</field>
         <field name="res_model">hotel.rooms</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,graph,kanban</field>
     </record>
 
     <!--Search View-->
@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name" />
+                <field name="category_ids" widget="many2many_tags"/>
                 <field name="selling_price" />
             </tree>
         </field>
@@ -48,12 +49,14 @@
                         <field name="room_image"></field>
                     </group>
                     <group>
+                        <field name="category_ids" widget="many2many_tags"/>
                         <field name="selling_price" />
                         <field name="hotel_id" />
+                        <field name="number_of_reservations"/>
                     </group>
                     <notebook>
                         <page string="Reservations">
-                            <field name="reservation_line_ids">
+                            <field name="reservation_line_ids" readonly="1">
                                 <tree>
                                     <field name="reservation_id"/>
                                     <field name="room_price"/>
@@ -63,6 +66,44 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!--Graph View-->
+    <record id="hotel_rooms_graph_view" model="ir.ui.view">
+        <field name="name">hotel.rooms.graph.view</field>
+        <field name="model">hotel.rooms</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="hotel_id"/>
+                <field name="name"/>
+                <field name="selling_price"/>
+                <field name="number_of_reservations"/>
+            </graph>
+        </field>
+    </record>
+
+    <!--Kanban View-->
+    <record id="hotel_rooms_kanban_view" model="ir.ui.view">
+        <field name="name">hotel.rooms.kanban.view</field>
+        <field name="model">hotel.rooms</field>
+        <field name="arch" type="xml">
+            <kanban string="services" editable="top" default_group_by="hotel_id">
+                <template>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <h2><field name="name"/></h2>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <p class="my-0"><i class="fa fa-money" /> <field name="selling_price" /></p>
+                            <div class="o_kanban_record_bottom mt-3">
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="o_value"><field name="number_of_reservations"/> reservations</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
         </field>
     </record>
 </odoo>

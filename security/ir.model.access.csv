@@ -4,3 +4,4 @@ service_access_model,service_access_model,model_hotel_service,base.group_user,1,
 reservation_access_model,reservation_access_model,model_hotel_reservation,base.group_user,1,1,1,1
 rooms_access_model,rooms_access_model,model_hotel_rooms,base.group_user,1,1,1,1
 reservation_line_access,reservation_line_access,model_hotel_reservation_line,base.group_user,1,1,1,1
+category_model_access,category_model_access,model_hotel_room_category,base.group_user,1,1,1,1

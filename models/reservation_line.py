@@ -11,8 +11,9 @@ class reservation_line(models.Model):
     room_price = fields.Float(string="Price", compute="_fetch_price", store=True, readonly=False)
     allowed_room_id = fields.One2many(related="hotel_id.room_ids")
     room_id = fields.Many2one(comodel_name="hotel.rooms", required=True)
-    start_date = fields.Date(related="reservation_id.start_date", store=True)
-    end_date = fields.Date(related="reservation_id.end_date", store=True)
+    category_ids = fields.Many2many(related="room_id.category_ids")
+    start_date = fields.Datetime(related="reservation_id.start_date", store=True)
+    end_date = fields.Datetime(related="reservation_id.end_date", store=True)
 
     _sql_constraints = [
         ("check_price_positive", "room_price > 0", "Room Price must be strictly positive")

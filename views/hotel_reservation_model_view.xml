@@ -4,7 +4,7 @@
     <record id="open_reservations" model="ir.actions.act_window">
         <field name="name">Reservations</field>
         <field name="res_model">hotel.reservation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban,graph,gantt</field>
     </record>
     
     <record id="reservation_action" model="ir.actions.act_window">
@@ -14,14 +14,39 @@
         <field name="domain">[("hotel_id", "=", active_id)]</field>
     </record>
 
+    <!--Search View-->
+    <record id="hotel_reservation_search_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.search.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="res_name" />
+                <field name="customer_id" />
+                <field name="hotel_id" />
+                <filter name="state" string="Booked" domain="[('state', '=', 'booked')]"/>
+                <filter name="state" string="Available" domain="[('state', 'in', ('booked', 'draft'))]"/>
+                <group expand="0" string="hotel_id">
+                    <filter name="hotel_id" string="Hotel" domain="[]" context="{'group_by': 'hotel_id'}"></filter>
+                </group>
+                <group expand="0" string="customer_id">
+                    <filter name="customer_id" string="Customer" domain="[]" context="{'group_by': 'customer_id'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    
     <!--Tree View-->
     <record id="reservation_custom_tree_view" model="ir.ui.view">
         <field name="name">reservation.default.view</field>
         <field name="model">hotel.reservation</field>
         <field name="arch" type="xml">
-            <tree string="test">
+            <tree decoration-muted="state == 'canceled'" >
                 <field name="res_name"/>
-                <field name="end_date"/>
+                <field string="Duration" name="start_date" widget="daterange" options="{'end_date_field': 'end_date'}"/>
+                <field name="discounted_price"/>
+                <field name="hotel_id"/>
+                <field name="state" column_invisible="1"/>
             </tree>
         </field>
     </record>
@@ -57,8 +82,7 @@
                     <br></br>
                     <group>
                         <group>
-                            <field name="start_date"/>
-                            <field name="end_date"/>
+                            <field name="start_date" widget="daterange" options="{'end_date_field': 'end_date'}"/>
                         </group>
                         <group>
                             <field name="stay_for" placeholder="0"/>
@@ -71,6 +95,7 @@
                                 <tree editable="bottom" open_form_view="True">
                                     <field name="allowed_room_id" column_invisible="1" />
                                     <field name="room_id" domain="[('id', 'in', allowed_room_id)]"/>
+                                    <field name="category_ids" widget="many2many_tags"/>
                                     <field name="room_price" editable="True"/>
                                 </tree>
                             </field>
@@ -86,4 +111,64 @@
             </form>
         </field>
     </record>
+
+    <!--Graph View-->
+    <record id="hotel_reservation_graph_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.graph.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="hotel_id"/>
+                <field name="selling_price"/>
+                <field name="discounted_price"/>
+                <field name="stay_for"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <!--Gantt View-->
+    <record id="hotel_reservation_gantt_view" model="ir.ui.view">
+        <field name="name">hotel.reservation.gantt.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <gantt date_stop="end_date" 
+                date_start="start_date" 
+                default_group_by="hotel_id" 
+                decoration-info="state == 'booked'"
+                color="id">
+                <field name="state" />
+            </gantt>
+        </field>
+    </record>
+
+    <!--Kanban View-->
+    <record id="hotel_reservation_kanban_view" model="ir.ui.view">
+        <field name="name">otel.reservation.kanban.view</field>
+        <field name="model">hotel.reservation</field>
+        <field name="arch" type="xml">
+            <kanban string="Reservations" editable="top" default_group_by="hotel_id">
+                <template>
+                    <t t-name="kanban-box">
+                        <field name="state" invisible="1"></field>
+                        <div t-attf-class="#{kanban_color(record.state.raw_value)} oe_kanban_global_click">
+                            <h2><field name="res_name"/></h2>
+                            <p class="my-0"><i class="fa fa-user"/> <field name="customer_id"/></p>
+                            <p class="my-0"><i class="fa fa-money" /> <field name="discounted_price" /></p>
+                            <field class="text-muted" name="start_date" widget="daterange" options="{'end_date_field': 'end_date'}" />
+                            <div class="o_kanban_record_bottom mt-3">
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="o_value"><field name="number_of_reservation_lines"/> rooms</span>
+                                </div>
+                                <div class="oe_kanban_record_bottom_right">
+                                    <field name="customer_image" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </template>
+            </kanban>
+        </field>
+    </record>
+
 </odoo>

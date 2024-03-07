@@ -11,6 +11,12 @@
                 <div class="container center-block">
                     <br></br>
                     <h2>All Hotels</h2>
+                    <form method="post" action="/index">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <input name="name" type="text" placeholder="Name"></input>
+                        <input name="address" type="text" placeholder="Address"></input>
+                        <input type="submit" value="Search"></input>
+                    </form>
                     <hr></hr>
                     <h4>
                         <div class="row">
@@ -59,10 +65,28 @@
                         <i class="text-muted" t-out="hotel.description"></i>
                         <hr />
                         <h5>Hotel Description</h5>
-                        <p>
+                        <div>
                             <strong>Manager :</strong>
                             <t t-out="hotel.managed_by.name" />
-                        </p>
+                        </div>
+                        <div>
+                            <strong>Address :</strong>
+                            <t t-out="hotel.address"/>
+                        </div>
+                        <br></br>
+                        <t t-if="hotel.contact_info_mail or hotel.contact_info_phone">
+                            <h5>Contact Information</h5>
+                            <div class="row">
+                                <p t-if="hotel.contact_info_mail" class="col-md-6">
+                                    <strong>Email :</strong>
+                                    <t t-out="hotel.contact_info_mail" />
+                                </p>
+                                <p t-if="hotel.contact_info_phone" class="col-md-6">
+                                    <strong>Phone :</strong>
+                                    <t t-out="hotel.contact_info_phone" />
+                                </p>
+                            </div>
+                        </t>
                     </div>
                 </div>
                 <t t-if="len(hotel.room_ids)">
@@ -93,7 +117,7 @@
                         <t t-foreach="hotel.service_ids" t-as="service">
                             <t>
                                 <div class="col-md-4">
-                                    <a t-attf-href="/index/service_id={{service.id}}"
+                                    <a t-attf-href="/index/service/?service_id={{service.id}}"
                                         style="color:black;"
                                         class="card-title">
                                         <div class="text-center card" style="margin:10px">
@@ -131,6 +155,10 @@
                             <hr />
                             <h5>Room Description</h5>
                             <p>
+                                <strong>Type :</strong>
+                                <t t-out="room.category_ids.name"></t>
+                            </p>
+                            <p>
                                 <strong>Price :</strong>
                                 <t t-out="room.selling_price" />
                             </p>
@@ -147,25 +175,27 @@
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous"></link>
         <t t-call="website.layout">
-            <t t-set="title">Service</t>
-            <div class="oe_structure" />
-            <div class="container">
-                <div class="row" style="padding:10px">
-                    <div class="col-md-5">
-                        <h2 t-field="service.name" t-options='{"format": "long"}'></h2>
-                        <hr />
-                        <h5>Service Description</h5>
-                        <p>
-                            <strong>Cost :</strong>
-                            <t t-out="service.cost" />
-                        </p>
-                        <p>
-                            <strong>Employee :</strong>
-                            <t t-out="service.assigned_to.name" />
-                        </p>
+            <t t-foreach="service" t-as="service">
+                <t t-set="title">Service</t>
+                <div class="oe_structure" />
+                <div class="container">
+                    <div class="row" style="padding:10px">
+                        <div class="col-md-5">
+                            <h2 t-field="service.name" t-options='{"format": "long"}'></h2>
+                            <hr />
+                            <h5>Service Description</h5>
+                            <p>
+                                <strong>Cost :</strong>
+                                <t t-out="service.cost" />
+                            </p>
+                            <p>
+                                <strong>Employee :</strong>
+                                <t t-out="service.assigned_to.name" />
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </t>
         </t>
     </template>
 </odoo>
