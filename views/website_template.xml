@@ -18,26 +18,25 @@
                         <input type="submit" value="Search"></input>
                     </form>
                     <hr></hr>
-                    <h4>
                         <div class="row">
                             <t t-foreach="hotels" t-as="hotel">
                                 <div class="col-md-4">
                                     <a t-attf-href="/index/hotel?hotel_id={{hotel.id}}"
-                                        style="color:black;"
-                                        class="card-title">
+                                        style="color:black;">
                                         <div class="text-center card" style="margin:10px">
                                             <img t-if="hotel.hotel_image"
                                                 class="card-img-top" alt="Hotel image"
                                                 t-att-src="image_data_uri(hotel.hotel_image)"></img>
                                             <div class="card-body">
-                                                <t t-esc="hotel.name" />
+                                                <h4 class="card-title" t-esc="hotel.name" />
+
+                                                <div><i class="fa fa-map-marker" /> <t class="card-text" t-esc="hotel.address"/></div>
                                             </div>
                                         </div>
                                     </a>
                                 </div>
                             </t>
                         </div>
-                    </h4>
                     <div style="margin:20px; display:flex; justify-content:center">
                         <t t-call="website.pager"></t>
                     </div>
@@ -66,11 +65,11 @@
                         <hr />
                         <h5>Hotel Description</h5>
                         <div>
-                            <strong>Manager :</strong>
+                            <i class="fa fa-user"/>
                             <t t-out="hotel.managed_by.name" />
                         </div>
                         <div>
-                            <strong>Address :</strong>
+                            <i class="fa fa-map-marker"/>
                             <t t-out="hotel.address"/>
                         </div>
                         <br></br>
@@ -78,13 +77,18 @@
                             <h5>Contact Information</h5>
                             <div class="row">
                                 <p t-if="hotel.contact_info_mail" class="col-md-6">
-                                    <strong>Email :</strong>
+                                    <i class="fa fa-envelope" />
                                     <t t-out="hotel.contact_info_mail" />
                                 </p>
                                 <p t-if="hotel.contact_info_phone" class="col-md-6">
-                                    <strong>Phone :</strong>
+                                    <i class="fa fa-phone"/>
                                     <t t-out="hotel.contact_info_phone" />
                                 </p>
+                            </div>
+                            <div>
+                                <a t-attf-href="/index/form/?id={{hotel.id}}">
+                                    <div class="btn btn-primary">Book this hotel</div>
+                                </a>
                             </div>
                         </t>
                     </div>
@@ -97,11 +101,13 @@
                             <t>
                                 <div class="col-md-4">
                                     <a t-attf-href="/index/room/?room_id={{room.id}}"
-                                        style="color:black;"
-                                        class="card-title">
+                                        style="color:black;">
                                         <div class="text-center card" style="margin:10px">
                                             <div class="card-body">
-                                                <t t-esc="room.name" />
+                                                <div class="card-title" t-esc="room.name" />
+                                                <t t-foreach="room.category_ids" t-as="category">
+                                                    <t t-esc="category.name" />
+                                                </t>
                                             </div>
                                         </div>
                                     </a>
@@ -117,15 +123,11 @@
                         <t t-foreach="hotel.service_ids" t-as="service">
                             <t>
                                 <div class="col-md-4">
-                                    <a t-attf-href="/index/service/?service_id={{service.id}}"
-                                        style="color:black;"
-                                        class="card-title">
-                                        <div class="text-center card" style="margin:10px">
-                                            <div class="card-body">
-                                                <t t-esc="service.name" />
-                                            </div>
+                                    <div class="text-center card" style="margin:10px">
+                                        <div class="card-body">
+                                            <t t-esc="service.name" />
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                             </t>
                         </t>
@@ -154,48 +156,83 @@
                             <h2 t-field="room.name" t-options='{"format": "long"}'></h2>
                             <hr />
                             <h5>Room Description</h5>
-                            <p>
+                            <div>
                                 <strong>Type :</strong>
                                 <t t-out="room.category_ids.name"></t>
-                            </p>
-                            <p>
+                            </div>
+                            <div>
                                 <strong>Price :</strong>
                                 <t t-out="room.selling_price" />
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </t>
         </t>
     </template>
-
-    <template id="service">
+    
+    <template id="form">
         <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous"></link>
         <t t-call="website.layout">
-            <t t-foreach="service" t-as="service">
-                <t t-set="title">Service</t>
+            <t t-set="title">Form</t>
                 <div class="oe_structure" />
                 <div class="container">
-                    <div class="row" style="padding:10px">
-                        <div class="col-md-5">
-                            <h2 t-field="service.name" t-options='{"format": "long"}'></h2>
-                            <hr />
-                            <h5>Service Description</h5>
-                            <p>
-                                <strong>Cost :</strong>
-                                <t t-out="service.cost" />
-                            </p>
-                            <p>
-                                <strong>Employee :</strong>
-                                <t t-out="service.assigned_to.name" />
-                            </p>
+                    <br />
+                    <h3>Booking</h3>
+                    <br/>
+                    <form method="post" action="/form/submit">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                        <input type="hidden" name="hotel" t-att-value="hotel.id" />
+                        <div class="row">
+                            <div class="col-md-5 form-group">
+                            <label for="date_form">Date from</label>
+                            <input type="date" class="form-control" name="date_from" />
+                            </div>
+                            <div class="col-md-5 form-group">
+                                <label for="date_to">Date To</label>
+                                <input type="date" class="form-control" name="date_to" />
+                            </div>
                         </div>
-                    </div>
+                        <br /><br/>
+                        <div class="form-group">
+                            <h5>Select Rooms</h5>
+                            <table class="table">
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Select</th>
+                                </tr>
+                                <t t-foreach="hotel.room_ids" t-as="room">
+                                    <tr>
+                                        <td><label t-attf-for="{{room.id}}"><t t-out="room.name" /></label></td>
+                                        <td><label t-attf-for="{{room.id}}"><t t-out="room.selling_price" /></label></td>
+                                        <td><input type="checkbox" t-attf-id="{{room.id}}" t-attf-value="{{room.id}}" t-attf-name="room_{{room.name}}" /></td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
             </t>
+    </template>
+    <template id="ThankYou">
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"></link>
+        <t t-call="website.layout">
+            <t t-set="title">Thank You</t>
+            <div class="oe_structure" />
+            <div class="container">
+                <div style="margin:auto">
+                    <h2>Thank You</h2>
+                </div>
+                <p>Our staff will contact you soon regarding you booking status</p>
+            </div>
         </t>
     </template>
 </odoo>

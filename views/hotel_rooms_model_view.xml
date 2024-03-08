@@ -18,6 +18,9 @@
                 <group expand="0" string="hotel_id">
                     <filter name="hotel_id" string="Hotels" domain="[]" context="{'group_by': 'hotel_id'}"></filter>
                 </group>
+                <group expand="0" string="category_ids">
+                    <filter name="category_ids" string="Categories" domain="[]" context="{'group_by': 'category_ids'}"></filter>
+                </group>
             </search>
         </field>
     </record>

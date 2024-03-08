@@ -12,7 +12,7 @@ class rooms(models.Model):
     hotel_id = fields.Many2one(string="Hotel", comodel_name="hotel.hotel", required=True, search="_search_hotel_id")
     reservation_line_ids = fields.One2many(string="Reservations", comodel_name="hotel.reservation.line", inverse_name="room_id")
     category_ids = fields.Many2many(string="Category", comodel_name="hotel.room.category")
-    number_of_reservations = fields.Integer(string="Reservation Count", compute="_compute_number_reservation", store=True)
+    number_of_reservations = fields.Integer(string="Reservations", compute="_compute_number_reservation", store=True)
 
     @api.depends("reservation_line_ids")
     def _compute_number_reservation(self):
@@ -20,5 +20,4 @@ class rooms(models.Model):
             record.number_of_reservations = len(record.reservation_line_ids)
 
     def _search_hotel_id(self, operator,value):
-        breakpoint()
         return[("hotel_id",operator,value)]

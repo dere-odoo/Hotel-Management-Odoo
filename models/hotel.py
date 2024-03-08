@@ -16,8 +16,8 @@ class hotel(models.Model):
     description = fields.Text(string="Description", default="Some hotel description")
     contact_info_mail = fields.Char(string="Contact Email")
     contact_info_phone = fields.Char(string="Contact Phone")
-    number_of_rooms = fields.Integer(string="Room count", compute="_compute_number_of_rooms", store=True)
-    number_of_reservations = fields.Integer(string="Reservation count", compute="_compute_number_of_reservation", store=True)
+    number_of_rooms = fields.Integer(string="Rooms", compute="_compute_number_of_rooms", store=True)
+    number_of_reservations = fields.Integer(string="Reservations", compute="_compute_number_of_reservation", store=True)
 
     @api.depends("reservation_ids")
     def _compute_number_of_reservation(self):

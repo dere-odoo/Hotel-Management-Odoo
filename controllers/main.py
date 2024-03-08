@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-
 
-from odoo import http
+from odoo import http, Command, fields
 
 number_of_record_per_page = 10
-class hotelManagementCOntroller(http.Controller):
+class hotelManagementController(http.Controller):
     @http.route(['/index', '/'], auth='public', website=True)
     def index(self, page=1, name=None, address=None, **kwargs):
         page=int(page)
@@ -46,10 +46,34 @@ class hotelManagementCOntroller(http.Controller):
             'rooms': room
         })
 
-    @http.route('/index/service', auth='public', website=True)
-    def service(self, **kwargs):
-        service_id = kwargs['service_id']
-        service = [val for val in http.request.env['hotel.service'].browse(int(service_id))]
-        return http.request.render('Hotel-Management-Odoo.service', {
-            'service': service
+    @http.route('/index/form', auth='public' , website=True)
+    def form(self, id=None,**kwargs):
+        hotel = http.request.env['hotel.hotel'].browse(int(id))
+        return http.request.render('Hotel-Management-Odoo.form', {
+            'hotel': hotel,
         })
+
+    @http.route('/form/submit', auth='public' , website=True)
+    def book(self,**kwargs):
+        user = http.request.env.user
+        date_from = kwargs.get('date_from')
+        date_end = kwargs.get('date_to')
+        hotel_id = kwargs.get('hotel')
+        reservation_line = []
+        for key,value in kwargs.items():
+            if key.startswith('room'):
+                reservation_line.append(Command.create({
+                    "room_id" : int(value),
+                }))
+        val = {
+            "res_name": f"website {user.id}",
+            "hotel_id": hotel_id,
+            "start_date" : date_from,
+            "end_date" : date_end,
+            "stay_for" : (fields.Datetime.to_datetime(date_end) - fields.Datetime.to_datetime(date_from)).days,
+            "customer_id" : user.id,
+            "reservation_line_ids" : reservation_line
+        }
+        http.request.env['hotel.reservation'].sudo().create(val)
+        return http.request.render('Hotel-Management-Odoo.ThankYou')
+        

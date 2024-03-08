@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <menuitem id = "estate_menu" name="Hotel Management">
+    <menuitem id = "hotel_management_menu" web_icon="Hotel-Management-Odoo,static/description/icon.png" name="Hotel Management">
         <menuitem id="reservation_topbar" name="Reservations" action="open_reservations"></menuitem>
         <menuitem id="hotel_topbar" name="Hotels">
             <menuitem id="topbar_open_hotels" name="Hotel" action="open_hotels"></menuitem>

@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 class reservation(models.Model):
     _name = "hotel.reservation"
     _description = "all customer reservation"
+    _inherit = ["mail.thread"]
 
     res_name = fields.Char(string="Name", required=True)
     selling_price = fields.Float(string="Expected price", compute="_compute_selling_price", store=True)
@@ -24,8 +25,10 @@ class reservation(models.Model):
     state = fields.Selection(string="state", default="draft",
         selection=[("draft", "Draft"), ("booked", "Booked"), ("canceled", "Canceled")]
     )
-    number_of_reservation_lines = fields.Integer(string="Room count", compute="_compute_number_of_reservation_lines", store=True)
-    customer_image = fields.Binary(related="customer_id.avatar_128", store=True)
+    number_of_reservation_lines = fields.Integer(string="Rooms", compute="_compute_number_of_reservation_lines", store=True)
+    customer_image = fields.Binary(related="customer_id.avatar_1920", attachment=True)
+    guest_ids = fields.Many2many(comodel_name="res.partner", string='participants')
+
 
     @api.depends("reservation_line_ids")
     def _compute_number_of_reservation_lines(self):
