@@ -7,6 +7,13 @@
         <field name="view_mode">tree,form,graph,kanban</field> 
     </record>
 
+    <record id="service_hotel_action" model="ir.actions.act_window">
+        <field name="name">Hotels</field>
+        <field name="res_model">hotel.hotel</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[("service_ids", "=", active_id)]</field>
+    </record>
+
     <!--Search View-->
     <record id="hotel_search" model="ir.ui.view">
         <field name="name">hotel.search.view</field>
@@ -52,14 +59,16 @@
                     </div>
                     <field name="description"></field>
                     <group>
-                        <field name="hotel_image"></field>
-                    </group>
-                    <group>
-                        <field name="managed_by" />
-                        <field name="address" />
-                        <field name="contact_info_mail" />
-                        <field name="contact_info_phone"/>
-                        <field name="number_of_reservations" invisible="1"/>
+                        <group>
+                            <field name="managed_by" />
+                            <field name="address" />
+                            <field name="contact_info_mail" />
+                            <field name="contact_info_phone"/>
+                            <field name="number_of_reservations" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="hotel_image" widget="image"></field>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Rooms">

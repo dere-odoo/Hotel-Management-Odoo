@@ -7,6 +7,13 @@
         <field name="view_mode">tree,form,graph,kanban</field>
     </record>
 
+    <record id="category_room_action" model="ir.actions.act_window">
+        <field name="name">Rooms</field>
+        <field name="res_model">hotel.rooms</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[("category_ids", "=", active_id)]</field>
+    </record>
+
     <!--Search View-->
     <record id="hotel_rooms_search" model="ir.ui.view">
         <field name="name">hotel.rooms.search.view</field>
@@ -49,19 +56,22 @@
                         <h1><field name="name" placeholder="Name"></field></h1>
                     </div>
                     <group>
-                        <field name="room_image"></field>
-                    </group>
-                    <group>
-                        <field name="category_ids" widget="many2many_tags"/>
-                        <field name="selling_price" />
-                        <field name="hotel_id" />
-                        <field name="number_of_reservations"/>
+                        <group>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <field name="selling_price" />
+                            <field name="hotel_id" />
+                            <field name="number_of_reservations"/>
+                        </group>
+                        <group>
+                            <field name="room_image" widget="image"></field>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Reservations">
                             <field name="reservation_line_ids" readonly="1">
                                 <tree>
                                     <field name="reservation_id"/>
+                                    <field class="text-muted" string="Dates" name="start_date" widget="daterange" options="{'end_date_field': 'end_date'}" />
                                     <field name="room_price"/>
                                 </tree>
                             </field>
@@ -91,7 +101,7 @@
         <field name="name">hotel.rooms.kanban.view</field>
         <field name="model">hotel.rooms</field>
         <field name="arch" type="xml">
-            <kanban string="services" editable="top" default_group_by="hotel_id">
+            <kanban string="services" create="false" delete="false" group_create="false" group_delete="false" default_group_by="hotel_id" >
                 <template>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">

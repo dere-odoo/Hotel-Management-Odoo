@@ -10,7 +10,7 @@
     <record id="reservation_action" model="ir.actions.act_window">
         <field name="name">Reservations</field>
         <field name="res_model">hotel.reservation</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,form</field>
         <field name="domain">[("hotel_id", "=", active_id)]</field>
     </record>
 
@@ -24,7 +24,6 @@
                 <field name="customer_id" />
                 <field name="hotel_id" />
                 <filter name="state" string="Booked" domain="[('state', '=', 'booked')]"/>
-                <filter name="state" string="Available" domain="[('state', 'in', ('booked', 'draft'))]"/>
                 <group expand="0" string="hotel_id">
                     <filter name="hotel_id" string="Hotel" domain="[]" context="{'group_by': 'hotel_id'}"></filter>
                 </group>
@@ -59,7 +58,7 @@
             <form>
                 <header>
                     <button name="action_reservation_book" type="object" string="Book" invisible="state in ('canceled', 'booked')" />
-                    <button name="action_reservation_cancel" type="object" string="Cancel" invisible="state in ('canceled', 'booked')" />
+                    <button name="action_reservation_cancel" type="object" string="Cancel" invisible="state in ('canceled')" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -94,7 +93,7 @@
                                 <tree editable="bottom" open_form_view="True">
                                     <field name="allowed_room_id" column_invisible="1" />
                                     <field name="room_id" domain="[('id', 'in', allowed_room_id)]"/>
-                                    <field name="category_ids" widget="many2many_tags"/>
+                                    <field name="category_ids" widget="many2many_tags" readonly="True"/>
                                     <field name="room_price" editable="True"/>
                                 </tree>
                             </field>
@@ -150,7 +149,7 @@
         <field name="name">otel.reservation.kanban.view</field>
         <field name="model">hotel.reservation</field>
         <field name="arch" type="xml">
-            <kanban string="Reservations" editable="top" default_group_by="hotel_id">
+            <kanban string="Reservations" create="false" delete="false" group_create="false" group_delete="false" default_group_by="hotel_id">
                 <field name="customer_image" invisible="1"></field>
                 <template>
                     <t t-name="kanban-box">

@@ -4,7 +4,7 @@ from odoo import http, Command, fields
 
 number_of_record_per_page = 10
 class hotelManagementController(http.Controller):
-    @http.route(['/index', '/'], auth='public', website=True)
+    @http.route(['/index', '/', '/index/page/<int:page>'], auth='public', website=True)
     def index(self, page=1, name=None, address=None, **kwargs):
         page=int(page)
         page = 1 if not page else page
@@ -13,7 +13,7 @@ class hotelManagementController(http.Controller):
         num_pages = total_hotels/number_of_record_per_page
         num_pages = int(num_pages)+1 if num_pages > int(num_pages) else int(num_pages) 
         pager = http.request.website.pager(
-            url="/hotel",
+            url="/index",
             total = total_hotels,
             page=page,
             step = number_of_record_per_page,

@@ -182,8 +182,10 @@
                 <div class="container">
                     <br />
                     <h3>Booking</h3>
+                    <h5>Hotel : <t t-out="hotel.name" /></h5>
                     <br/>
                     <form method="post" action="/form/submit">
+                        <br />
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                         <input type="hidden" name="hotel" t-att-value="hotel.id" />
                         <div class="row">

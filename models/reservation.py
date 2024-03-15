@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 class reservation(models.Model):
     _name = "hotel.reservation"
     _description = "all customer reservation"
-    _inherit = ["mail.thread"]
+    _inherit = "mail.thread"
 
     res_name = fields.Char(string="Name", required=True)
     selling_price = fields.Float(string="Expected price", compute="_compute_selling_price", store=True)
@@ -23,7 +23,8 @@ class reservation(models.Model):
     active = fields.Boolean(string="Active", default=True)
     comments = fields.Text(string="Comments")
     state = fields.Selection(string="state", default="draft",
-        selection=[("draft", "Draft"), ("booked", "Booked"), ("canceled", "Canceled")]
+        selection=[("draft", "Draft"), ("booked", "Booked"), ("canceled", "Canceled")],
+        tracking=True
     )
     number_of_reservation_lines = fields.Integer(string="Rooms", compute="_compute_number_of_reservation_lines", store=True)
     customer_image = fields.Binary(related="customer_id.avatar_1920", attachment=True)
@@ -75,11 +76,18 @@ class reservation(models.Model):
     def action_reservation_book(self):
         self.ensure_one()
         cur_rooms = [reservation_line.room_id.id for reservation_line in self.reservation_line_ids] 
-        reservations_count = self.search_count([("hotel_id", "=", self.hotel_id.id), ("end_date", ">=" , fields.Date.to_date(self.start_date)), ("state", "=", "booked"), ("reservation_line_ids.room_id.id", "in", cur_rooms)])
+        reservations_count = self.search_count([("hotel_id", "=", self.hotel_id.id), ("end_date", ">=" , fields.Datetime.to_datetime(self.start_date)), ("state", "=", "booked"), ("reservation_line_ids.room_id.id", "in", cur_rooms)])
         if reservations_count > 0:
             raise UserError("One of the rooms in this reservations is already booked")
         self.state = "booked"
     
+    
     def action_reservation_cancel(self):
         self.ensure_one()
         self.state = "canceled"
+    
+    @api.model
+    def write(self,val):
+        if self.state in ("booked", "canceled") and "state" not in val:
+            raise UserError("cannot edit a booked / canceled reservation")
+        return super(reservation, self).write(val)
